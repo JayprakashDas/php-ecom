@@ -1,7 +1,7 @@
 <?php
 
 if($connection){
-    echo "connected";
+    // echo "connected";
 }
 
 function redirect($location){
@@ -21,6 +21,7 @@ function confirm($result){
     }
 }
 
+
 function escape_string($string){
     global $connection;
     return mysqli_real_escape_string($connection, $string);
@@ -30,6 +31,10 @@ function fetch_array($result){
     return mysqli_fetch_array($result);
 }
 
+function last_id(){
+    global $connection;
+    return $last_id = mysqli_insert_id($connection);
+}
 
 //get products
 function getproducts(){
@@ -48,7 +53,7 @@ function getproducts(){
                             <h4><a href="product.html">{$row['product_title']}</a>
                             </h4>
                             <p>See more snippets like this online store item at <a target="_blank" href="http://www.bootsnipp.com">Bootsnipp - http://bootsnipp.com</a>.</p>
-                            <a class="btn btn-primary" href="cart.php?add={$row['product_id']}">Add to cart</a>
+                            <a class="btn btn-primary" href="../resources/cart.php?add={$row['product_id']}">Add to cart</a>
                         </div>
                 </div>
         </div>  
@@ -122,7 +127,7 @@ function shop_page(){
                             <h4><a href="product.html">{$row['product_title']}</a>
                             </h4>
                             <p>See more snippets like this online store item at <a target="_blank" href="http://www.bootsnipp.com">Bootsnipp - http://bootsnipp.com</a>.</p>
-                            <a class="btn btn-primary" href="item.php">Add to cart</a>
+                            <a class="btn btn-primary" href="../resources/cart.php?add={$row['product_id']}">Add to cart</a>
                         </div>
                 </div>
         </div>  
@@ -132,6 +137,9 @@ DELIMETER;
        echo $product;
     }
 }
+
+
+// user LOGIN////////////
 
 function login_user(){
 
@@ -147,6 +155,7 @@ function login_user(){
             redirect('login.php');
             set_message("something wen wrong");
         } else {
+            $_SESSION['username'] = $username;
             set_message("welcome {$username}");
             redirect("admin");
         }
@@ -182,4 +191,26 @@ function send_message(){
 
        mail($to, $phone, $text, $headers );
     }
+}
+
+
+///DISPLAY ORDER IN ADMIN///
+function display_order(){
+        $query = query("SELECT * FROM orders");
+
+        confirm($query);
+
+        while($row = fetch_array($query)){
+            $orders = <<<DELIMETER
+            <tr>
+                <td>{$row['order_id']}</td>
+                <td>{$row['order_amount']}</td>
+                <td>{$row['order_transaction']}</td>
+                <td>{$row['order_currency']}</td>
+                <td>{$row['order_status']}</td>
+            </tr>
+DELIMETER;
+
+echo $orders;
+        }
 }

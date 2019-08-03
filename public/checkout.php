@@ -1,6 +1,6 @@
 <?php require_once("../resources/config.php")?>
 <?php include(TEMPLATE_FRONT .DS. "header.php")?> 
-<?php require_once("cart.php")?>
+
 
 
 <?php
@@ -26,7 +26,13 @@ if(isset( $_SESSION['product_1'])){
 
       <h1>Checkout</h1>
 
-<form action="">
+
+<form  action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post">
+  <input type="hidden" name="cmd" value="_cart">
+  <input type="hidden" name="business" value="jaydasb@gmail.com">
+  <input type="hidden" name="upload" value="1">
+  <!-- <input type="hidden" name="business" value="dasjay084@gmail.com"> -->
+  <!-- <in put type="hidden" name="at" value="YourIdentityToken"> -->
     <table class="table table-striped">
         <thead>
           <tr>
@@ -39,9 +45,18 @@ if(isset( $_SESSION['product_1'])){
         </thead>
         <tbody>
            <?php cart()?>
-        </tbody>
+        </tbody> 
     </table>
+    <?Php if(isset($_SESSION['item_quantity'])){
+        $value = $_SESSION['item_quantity'];
+        if($value>0){
+          echo "<input type='submit' value='Buy Now' name='PayPal'>";
+        }
+        
+      }?>
+    
 </form>
+
 
 
 
